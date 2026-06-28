@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartGym - Sistema de Gestão para Academias</title>
+    <style>
+        /* ===== RESET E BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: #2d3436;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            padding: 50px 55px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== DECORAÇÃO DE FUNDO ===== */
+        .container::before {
+            content: "🏋️";
+            position: absolute;
+            right: -40px;
+            top: -40px;
+            font-size: 200px;
+            opacity: 0.04;
+            transform: rotate(15deg);
+            pointer-events: none;
+        }
+
+        /* ===== TIPOGRAFIA ===== */
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6c5ce7, #00b894);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-top: 55px;
+            margin-bottom: 25px;
+            padding-bottom: 14px;
+            border-bottom: 5px solid #6c5ce7;
+            position: relative;
+        }
+
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 80px;
+            height: 5px;
+            background: #00b894;
+            border-radius: 0 0 4px 4px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        p {
+            margin-bottom: 18px;
+            color: #444;
+            font-size: 1.05rem;
+        }
+
+        .highlight {
+            color: #6c5ce7;
+            font-weight: 700;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .header-left .subtitle {
+            font-size: 1.2rem;
+            color: #636e72;
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        .header-left .tagline {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #6c5ce7;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .header-right {
+            text-align: right;
+            background: #f8f9fa;
+            padding: 14px 24px;
+            border-radius: 16px;
+            border-left: 5px solid #6c5ce7;
+        }
+
+        .header-right .badge {
+            background: #6c5ce7;
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .header-right .info {
+            display: block;
+            margin-top: 6px;
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 25px;
+            border-left: 7px solid #6c5ce7;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 30px rgba(108, 92, 231, 0.10);
+        }
+
+        .card-green {
+            border-left-color: #00b894;
+        }
+        .card-blue {
+            border-left-color: #0984e3;
+        }
+        .card-orange {
+            border-left-color: #fdcb6e;
+        }
+        .card-red {
+            border-left-color: #e17055;
+        }
+        .card-purple {
+            border-left-color: #6c5ce7;
+        }
+        .card-pink {
+            border-left-color: #fd79a8;
+        }
+
+        /* ===== GRID ===== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 25px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        /* ===== FEATURE BOX ===== */
+        .feature-box {
+            background: #ffffff;
+            padding: 24px 22px 28px;
+            border-radius: 16px;
+            border: 1px solid #ecf0f1;
+            border-top: 6px solid #6c5ce7;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        .feature-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 45px rgba(108, 92, 231, 0.12);
+        }
+
+        .feature-box .icon {
+            font-size: 2.6rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .feature-box h4 {
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+
+        .feature-box p {
+            font-size: 0.98rem;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .feature-box ul {
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+
+        .feature-box ul li {
+            margin-bottom: 6px;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        /* ===== LISTAS ===== */
+        ul,
+        ol {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        ul li,
+        ol li {
+            margin-bottom: 8px;
+            color: #444;
+            font-size: 1.02rem;
+        }
+
+        .list-check {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-check li::before {
+            content: "✅ ";
+            font-weight: bold;
+        }
+
+        .list-star {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .list-star li::before {
+            content: "⭐ ";
+            font-weight: bold;
+        }
+
+        /* ===== PROTÓTIPOS ===== */
+        .prototype-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 30px;
+            margin: 35px 0;
+        }
+
+        .prototype-card {
+            background: #ffffff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.06);
+            border: 1px solid #ecf0f1;
+            transition: all 0.3s ease;
+        }
+
+        .prototype-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.10);
+        }
+
+        .prototype-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #fff;
+            padding: 14px 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prototype-header .dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .prototype-header .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red {
+            background: #e17055;
+        }
+        .dot-yellow {
+            background: #fdcb6e;
+        }
+        .dot-green {
+            background: #00b894;
+        }
+
+        .prototype-body {
+            padding: 20px 22px 25px;
+            background: #fafbfc;
+        }
+
+        .prototype-body .screen-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .prototype-body .screen-desc {
+            color: #636e72;
+            font-size: 0.9rem;
+            margin-bottom: 14px;
+        }
+
+        .mockup {
+            background: #eef0f2;
+            border-radius: 12px;
+            padding: 18px 16px;
+            font-size: 0.8rem;
+            color: #2d3436;
+            line-height: 1.6;
+            border: 2px dashed #b2bec3;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .mockup .mock-content {
+            width: 100%;
+        }
+
+        .mockup .mock-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 0.75rem;
+        }
+
+        .mockup .mock-row:last-child {
+            border-bottom: none;
+        }
+
+        .mockup .mock-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .mockup .mock-value {
+            color: #636e72;
+        }
+
+        .mockup .mock-badge {
+            display: inline-block;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        .mockup .mock-badge.success {
+            background: #00b894;
+            color: #fff;
+        }
+        .mockup .mock-badge.warning {
+            background: #fdcb6e;
+            color: #2c3e50;
+        }
+        .mockup .mock-badge.danger {
+            background: #e17055;
+            color: #fff;
+        }
+        .mockup .mock-badge.primary {
+            background: #6c5ce7;
+            color: #fff;
+        }
+
+        .mockup .mock-btn {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: #6c5ce7;
+            color: #fff;
+            margin-top: 6px;
+        }
+
+        /* ===== SECTION DIFERENCIAIS ===== */
+        .differential-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .diff-item {
+            text-align: center;
+            padding: 25px 20px;
+            background: #f8f9fa;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .diff-item:hover {
+            background: #6c5ce7;
+            color: #fff;
+            transform: scale(1.02);
+        }
+
+        .diff-item:hover h4,
+        .diff-item:hover p {
+            color: #fff;
+        }
+
+        .diff-item .diff-icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .diff-item h4 {
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+        .diff-item p {
+            font-size: 0.95rem;
+            margin-bottom: 0;
+            color: #555;
+        }
+
+        /* ===== PERFIS ===== */
+        .perfil-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .perfil-card {
+            background: #ffffff;
+            padding: 25px 22px 28px;
+            border-radius: 16px;
+            border: 1px solid #ecf0f1;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        .perfil-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .perfil-card .perfil-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .perfil-card h4 {
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        .perfil-card ul {
+            text-align: left;
+            padding-left: 20px;
+            font-size: 0.95rem;
+        }
+        .perfil-card ul li {
+            font-size: 0.92rem;
+            margin-bottom: 5px;
+        }
+
+        .perfil-admin {
+            border-top: 6px solid #6c5ce7;
+        }
+        .perfil-instrutor {
+            border-top: 6px solid #0984e3;
+        }
+        .perfil-aluno {
+            border-top: 6px solid #00b894;
+        }
+
+        /* ===== TABELA ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        table thead {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #fff;
+        }
+
+        table th {
+            padding: 16px 22px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 14px 22px;
+            border-bottom: 1px solid #ecf0f1;
+            color: #444;
+        }
+
+        table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== QUOTE ===== */
+        .quote-box {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #dfe6e9;
+            padding: 35px 40px;
+            border-radius: 18px;
+            margin: 40px 0 20px;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 4rem;
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            color: #6c5ce7;
+            opacity: 0.3;
+        }
+
+        .quote-box p {
+            color: #dfe6e9;
+            font-size: 1.15rem;
+            font-style: italic;
+            padding-left: 30px;
+        }
+
+        .quote-box cite {
+            display: block;
+            margin-top: 12px;
+            font-style: normal;
+            color: #b2bec3;
+            font-size: 0.95rem;
+            padding-left: 30px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 55px;
+            padding-top: 30px;
+            border-top: 2px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+
+        .footer strong {
+            color: #2c3e50;
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 992px) {
+            .container {
+                padding: 35px 30px;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4,
+            .differential-grid,
+            .perfil-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 22px 16px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+                margin-top: 35px;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4,
+            .differential-grid,
+            .perfil-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .header-right {
+                text-align: left;
+                width: 100%;
+            }
+
+            .prototype-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quote-box {
+                padding: 25px 20px;
+            }
+            .quote-box p {
+                font-size: 1rem;
+                padding-left: 0;
+            }
+            .quote-box cite {
+                padding-left: 0;
+            }
+            .quote-box::before {
+                display: none;
+            }
+        }
+
+        /* ===== ANIMAÇÃO ===== */
+        .fade-in {
+            animation: fadeIn 0.9s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== BADGES ===== */
+        .tag {
+            display: inline-block;
+            padding: 3px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .tag-primary {
+            background: #6c5ce7;
+            color: #fff;
+        }
+        .tag-success {
+            background: #00b894;
+            color: #fff;
+        }
+        .tag-warning {
+            background: #fdcb6e;
+            color: #2c3e50;
+        }
+        .tag-danger {
+            background: #e17055;
+            color: #fff;
+        }
+        .tag-info {
+            background: #0984e3;
+            color: #fff;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+        .mt-10 {
+            margin-top: 10px;
+        }
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container fade-in">
+
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <div class="header-left">
+                <h1>🏋️ SmartGym</h1>
+                <p class="subtitle">Sistema Inteligente de Gestão para Academias</p>
+                <span class="tagline">📌 Projeto Integrador — Disciplina: Projeto e Implementação de Sistemas para Web 2</span>
+            </div>
+            <div class="header-right">
+                <span class="badge">🚀 Em Desenvolvimento</span>
+                <span class="info">📅 Versão Conceitual · 2026</span>
+            </div>
+        </header>
+
+        <!-- ===== DESCRIÇÃO ===== -->
+        <section>
+            <h2>📌 Sobre o Projeto</h2>
+            <div class="card card-purple">
+                <p style="font-size:1.1rem;">
+                    O <strong>SmartGym</strong> é um <span class="highlight">sistema completo de gestão</span> 
+                    desenvolvido para <strong>modernizar e automatizar</strong> a administração de academias, 
+                    centros de treinamento e estúdios fitness.
+                </p>
+                <p>
+                    Com uma <strong>interface intuitiva e funcionalidades poderosas</strong>, o SmartGym 
+                    permite que gestores, instrutores e alunos tenham <strong>controle total</strong> sobre 
+                    matrículas, planos, frequência, pagamentos e evolução de treinos — tudo em um único lugar.
+                </p>
+                <p>
+                    O projeto nasce da <strong>necessidade real</strong> de academias que ainda utilizam 
+                    planilhas manuais, sistemas ultrapassados ou múltiplas ferramentas desconectadas, 
+                    gerando <strong>ineficiência, erros e perda de tempo</strong>.
+                </p>
+            </div>
+        </section>
+
+        <!-- ===== OBJETIVO ===== -->
+        <section>
+            <h2>🎯 Objetivo do Projeto</h2>
+            <div class="card card-blue">
+                <p style="font-size:1.1rem;">
+                    <strong>Desenvolver uma plataforma web inteligente e acessível</strong> que resolva 
+                    os principais desafios da gestão de academias, proporcionando:
+                </p>
+                <ul class="list-check" style="font-size:1.05rem;">
+                    <li><strong>Centralização</strong> de todas as informações em um único sistema;</li>
+                    <li><strong>Automação</strong> de processos repetitivos (matrículas, cobranças, relatórios);</li>
+                    <li><strong>Tomada de decisão</strong> baseada em dados reais e dashboards visuais;</li>
+                    <li><strong>Melhoria da experiência</strong> do aluno com acompanhamento personalizado;</li>
+                    <li><strong>Redução de custos</strong> operacionais e inadimplência;</li>
+                    <li><strong>Escalabilidade</strong> para crescer junto com a academia.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ===== MISSÃO, VISÃO, VALORES ===== -->
+        <section>
+            <h2>🧭 Missão, Visão e Valores</h2>
+
+            <div class="grid-3">
+                <div class="feature-box" style="border-top-color:#0984e3;">
+                    <span class="icon">🚀</span>
+                    <h4>Missão</h4>
+                    <p>
+                        <strong>Transformar a gestão de academias</strong> por meio da tecnologia, 
+                        oferecendo uma solução que <span class="highlight">simplifica o dia a dia</span> 
+                        de gestores e potencializa a experiência dos alunos.
+                    </p>
+                    <p style="font-size:0.95rem; color:#636e72; font-style:italic;">
+                        "Tecnologia a serviço do bem-estar."
+                    </p>
+                </div>
+
+                <div class="feature-box" style="border-top-color:#6c5ce7;">
+                    <span class="icon">👁️</span>
+                    <h4>Visão</h4>
+                    <p>
+                        Ser a <strong>principal referência em gestão fitness</strong> da América Latina, 
+                        reconhecida por <span class="highlight">inovação, confiabilidade e impacto positivo</span> 
+                        na vida de milhares de alunos e na eficiência de academias de todos os portes.
+                    </p>
+                </div>
+
+                <div class="feature-box" style="border-top-color:#00b894;">
+                    <span class="icon">💎</span>
+                    <h4>Valores</h4>
+                    <ul style="padding-left:18px; margin-bottom:0;">
+                        <li><strong>💡 Inovação</strong> — Sempre em evolução.</li>
+                        <li><strong>🤝 Confiança</strong> — Transparência com os dados.</li>
+                        <li><strong>⚡ Eficiência</strong> — Otimização de tempo e recursos.</li>
+                        <li><strong>❤️ Empatia</strong> — Foco nas pessoas.</li>
+                        <li><strong>📈 Resultado</strong> — Entregar valor real.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PÚBLICO-ALVO ===== -->
+        <section>
+            <h2>👥 Público-Alvo</h2>
+            <p style="font-size:1.05rem; margin-bottom:25px;">
+                O SmartGym foi projetado para atender <strong>dois grandes grupos</strong> com necessidades distintas:
+            </p>
+
+            <div class="grid-2">
+                <!-- Grupo 1 -->
+                <div class="feature-box" style="border-top-color:#00b894;">
+                    <span class="icon">🏢</span>
+                    <h4>1. Academias e Centros de Treinamento</h4>
+                    <p>
+                        <strong>Gestores, recepcionistas e instrutores</strong> que buscam:
+                    </p>
+                    <ul>
+                        <li>Controlar <strong>matrículas e planos</strong> de forma ágil;</li>
+                        <li>Registrar <strong>frequência</strong> dos alunos diariamente;</li>
+                        <li>Gerenciar <strong>pagamentos e inadimplência</strong>;</li>
+                        <li>Acompanhar <strong>indicadores de desempenho</strong>;</li>
+                        <li>Oferecer um <strong>atendimento mais personalizado</strong>.</li>
+                    </ul>
+                    <p style="margin-top:14px; background:#ecf0f1; padding:10px 16px; border-radius:10px; font-size:0.9rem;">
+                        <strong>🎯 Exemplo:</strong> Academia "FitLife" com 300+ alunos e equipe de 8 profissionais.
+                    </p>
+                </div>
+
+                <!-- Grupo 2 -->
+                <div class="feature-box" style="border-top-color:#0984e3;">
+                    <span class="icon">👨‍💻</span>
+                    <h4>2. Empreendedores e Desenvolvedores</h4>
+                    <p>
+                        <strong>Pessoas que desejam:</strong>
+                    </p>
+                    <ul>
+                        <li><strong>Adquirir</strong> o sistema para sua própria academia;</li>
+                        <li><strong>Revender</strong> como solução white-label para outras academias;</li>
+                        <li><strong>Personalizar</strong> e expandir com novas funcionalidades;</li>
+                        <li><strong>Utilizar como base</strong> para projetos similares no mercado fitness;</li>
+                        <li><strong>Oferecer como serviço</strong> (SaaS) para múltiplos clientes.</li>
+                    </ul>
+                    <p style="margin-top:14px; background:#ecf0f1; padding:10px 16px; border-radius:10px; font-size:0.9rem;">
+                        <strong>🎯 Exemplo:</strong> Empreendedor que quer vender o sistema para 10 academias da sua cidade.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card card-orange" style="margin-top:10px;">
+                <p style="margin-bottom:0; font-size:1.05rem;">
+                    <strong>🌟 Diferencial:</strong> O SmartGym é <span class="highlight">100% adaptável</span> 
+                    — pode ser usado por <strong>uma única academia</strong> ou <strong>revendido como produto</strong>, 
+                    atendendo desde pequenos estúdios até grandes redes de franquias.
+                </p>
+            </div>
+        </section>
+
+        <!-- ===== PERFIS DE USUÁRIO ===== -->
+        <section>
+            <h2>👤 Perfis de Usuário</h2>
+            <p>O sistema contará com <strong>três perfis</strong> com níveis de acesso diferentes:</p>
+
+            <div class="perfil-grid">
+                <div class="perfil-card perfil-admin">
+                    <span class="perfil-icon">👑</span>
+                    <h4>Administrador</h4>
+                    <p><strong>Acesso total</strong> ao sistema:</p>
+                    <ul>
+                        <li>Gerenciar todos os alunos e instrutores</li>
+                        <li>Cadastrar e editar planos</li>
+                        <li>Visualizar relatórios financeiros</li>
+                        <li>Configurar parâmetros do sistema</li>
+                        <li>Controle de inadimplência</li>
+                    </ul>
+                </div>
+
+                <div class="perfil-card perfil-instrutor">
+                    <span class="perfil-icon">🧘</span>
+                    <h4>Instrutor</h4>
+                    <p><strong>Acesso operacional</strong>:</p>
+                    <ul>
+                        <li>Visualizar alunos da sua turma</li>
+                        <li>Registrar frequência diária</li>
+                        <li>Acompanhar evolução dos alunos</li>
+                        <li>Adicionar observações sobre treinos</li>
+                        <li>Consultar histórico de alunos</li>
+                    </ul>
+                </div>
+
+                <div class="perfil-card perfil-aluno">
+                    <span class="perfil-icon">🏋️</span>
+                    <h4>Aluno</h4>
+                    <p><strong>Acesso pessoal</strong>:</p>
+                    <ul>
+                        <li>Visualizar seu plano e matrícula</li>
+                        <li>Consultar frequência e histórico</li>
+                        <li>Ver pagamentos realizados</li>
+                        <li>Acompanhar evolução de treinos</li>
+                        <li>Atualizar dados cadastrais</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== FUNCIONALIDADES ===== -->
+        <section>
+            <h2>⚙️ Funcionalidades Previstas</h2>
+
+            <div class="grid-3">
+                <div class="feature-box" style="border-top-color:#6c5ce7;">
+                    <span class="icon">🔐</span>
+                    <h4>Autenticação e Segurança</h4>
+                    <ul>
+                        <li>Login com e-mail e senha</li>
+                        <li>Recuperação de senha</li>
+                        <li>Controle de sessão</li>
+                        <li>Perfis com permissões distintas</li>
+                        <li>Registro de logs de acesso</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box" style="border-top-color:#0984e3;">
+                    <span class="icon">👤</span>
+                    <h4>Gestão de Alunos</h4>
+                    <ul>
+                        <li>Cadastro completo com foto</li>
+                        <li>Pesquisa e filtros avançados</li>
+                        <li>Histórico de treinos e evolução</li>
+                        <li>Anotações e observações</li>
+                        <li>Exportação de dados</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box" style="border-top-color:#00b894;">
+                    <span class="icon">📋</span>
+                    <h4>Planos e Matrículas</h4>
+                    <ul>
+                        <li>Cadastro de planos (mensal, trimestral, anual)</li>
+                        <li>Matrícula automática e renovação</li>
+                        <li>Cálculo de vencimento</li>
+                        <li>Cancelamento e reativação</li>
+                        <li>Histórico de alterações</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box" style="border-top-color:#fdcb6e;">
+                    <span class="icon">📅</span>
+                    <h4>Frequência</h4>
+                    <ul>
+                        <li>Registro diário de presença</li>
+                        <li>Controle por matrícula</li>
+                        <li>Relatórios de frequência</li>
+                        <li>Gráficos de assiduidade</li>
+                        <li>Notificação de faltas</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box" style="border-top-color:#e17055;">
+                    <span class="icon">💰</span>
+                    <h4>Pagamentos e Finanças</h4>
+                    <ul>
+                        <li>Registro de pagamentos</li>
+                        <li>Controle de inadimplência</li>
+                        <li>Envio de comprovantes</li>
+                        <li>Relatório financeiro mensal</li>
+                        <li>Previsão de faturamento</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box" style="border-top-color:#fd79a8;">
+                    <span class="icon">📊</span>
+                    <h4>Dashboards e Relatórios</h4>
+                    <ul>
+                        <li>Resumo de alunos ativos</li>
+                        <li>Faturamento mensal e anual</li>
+                        <li>Taxa de frequência geral</li>
+                        <li>Alunos inadimplentes</li>
+                        <li>Gráficos interativos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Funcionalidades extras -->
+            <div class="card card-green" style="margin-top:15px;">
+                <p style="font-size:1.05rem; margin-bottom:10px;">
+                    <strong>➕ Funcionalidades Extras (planejadas)</strong>
+                </p>
+                <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                    <span class="tag tag-primary">📱 Aplicativo mobile</span>
+                    <span class="tag tag-success">📧 Envio de e-mails automáticos</span>
+                    <span class="tag tag-warning">💬 Chat entre aluno e instrutor</span>
+                    <span class="tag tag-info">📋 Ficha de treino digital</span>
+                    <span class="tag tag-danger">📊 Integração com Google Sheets</span>
+                    <span class="tag tag-primary">🔔 Notificações push</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== DIFERENCIAIS ===== -->
+        <section>
+            <h2>🌟 Diferenciais do SmartGym</h2>
+            <div class="differential-grid">
+                <div class="diff-item">
+                    <span class="diff-icon">🎯</span>
+                    <h4>Foco no Usuário</h4>
+                    <p>Interface intuitiva, design pensado para facilitar o dia a dia de gestores e alunos.</p>
+                </div>
+                <div class="diff-item">
+                    <span class="diff-icon">📈</span>
+                    <h4>Dados em Tempo Real</h4>
+                    <p>Dashboards atualizados automaticamente para tomada de decisão rápida.</p>
+                </div>
+                <div class="diff-item">
+                    <span class="diff-icon">🔒</span>
+                    <h4>Segurança Total</h4>
+                    <p>Dados protegidos com criptografia e controle de acesso por perfil.</p>
+                </div>
+                <div class="diff-item">
+                    <span class="diff-icon">🔄</span>
+                    <h4>Escalabilidade</h4>
+                    <p>Funciona para uma academia ou para uma rede de franquias.</p>
+                </div>
+                <div class="diff-item">
+                    <span class="diff-icon">📱</span>
+                    <h4>Multiplataforma</h4>
+                    <p>Acesse de qualquer dispositivo com navegador: computador, tablet ou celular.</p>
+                </div>
+                <div class="diff-item">
+                    <span class="diff-icon">💰</span>
+                    <h4>Custo-Benefício</h4>
+                    <p>Redução de custos operacionais e aumento da eficiência financeira.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROTÓTIPOS ===== -->
+        <section>
+            <h2>🎨 Protótipos das Telas</h2>
+            <p style="margin-bottom:25px;">
+                Visualize como serão as principais interfaces do SmartGym:
+            </p>
+
+            <div class="prototype-grid">
+
+                <!-- Tela 1: Login -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <span class="dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </span>
+                        Login
+                    </div>
+                    <div class="prototype-body">
+                        <div class="screen-title">🔐 Tela de Login</div>
+                        <div class="screen-desc">Acesso inicial com e-mail e senha.</div>
+                        <div class="mockup">
+                            <div class="mock-content">
+                                <div style="font-size:1.2rem; font-weight:700; color:#6c5ce7;">🏋️ SmartGym</div>
+                                <div style="margin:6px 0; color:#b2bec3; font-size:0.7rem;">━━━━━━━━━━━━━━━━</div>
+                                <div class="mock-row"><span class="mock-label">📧 Email</span> <span class="mock-value">admin@smartgym.com</span></div>
+                                <div class="mock-row"><span class="mock-label">🔒 Senha</span> <span class="mock-value">••••••••</span></div>
+                                <div style="margin-top:10px;">
+                                    <span class="mock-btn">🔓 Entrar</span>
+                                </div>
+                                <div style="font-size:0.65rem; color:#b2bec3; margin-top:6px;">Esqueceu a senha?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tela 2: Dashboard -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <span class="dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </span>
+                        Dashboard
+                    </div>
+                    <div class="prototype-body">
+                        <div class="screen-title">📊 Dashboard</div>
+                        <div class="screen-desc">Visão geral com indicadores-chave.</div>
+                        <div class="mockup">
+                            <div class="mock-content">
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
+                                    <div style="background:#dfe6e9; padding:8px 6px; border-radius:8px; font-size:0.7rem;">
+                                        👥 <strong>245</strong><br>Alunos Ativos
+                                    </div>
+                                    <div style="background:#dfe6e9; padding:8px 6px; border-radius:8px; font-size:0.7rem;">
+                                        📈 <strong>R$ 32.450</strong><br>Faturamento Mês
+                                    </div>
+                                    <div style="background:#dfe6e9; padding:8px 6px; border-radius:8px; font-size:0.7rem;">
+                                        📅 <strong>78%</strong><br>Frequência
+                                    </div>
+                                    <div style="background:#dfe6e9; padding:8px 6px; border-radius:8px; font-size:0.7rem;">
+                                        ⚠️ <strong>12</strong><br>Inadimplentes
+                                    </div>
+                                </div>
+                                <div style="font-size:0.6rem; color:#636e72; border-top:1px solid #dfe6e9; padding-top:6px;">
+                                    Último acesso: hoje às 09:32
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tela 3: Lista de Alunos -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <span class="dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </span>
+                        Alunos
+                    </div>
+                    <div class="prototype-body">
+                        <div class="screen-title">👤 Lista de Alunos</div>
+                        <div class="screen-desc">Consulta e gestão de alunos cadastrados.</div>
+                        <div class="mockup">
+                            <div class="mock-content">
+                                <div style="display:flex; justify-content:space-between; border-bottom:1px solid #b2bec3; padding-bottom:4px; font-weight:600; font-size:0.7rem; color:#2c3e50;">
+                                    <span>Nome</span> <span>Plano</span> <span>Status</span>
+                                </div>
+                                <div class="mock-row"><span>João Silva</span> <span>Mensal</span> <span class="mock-badge success">Ativo</span></div>
+                                <div class="mock-row"><span>Maria Souza</span> <span>Trimestral</span> <span class="mock-badge success">Ativo</span></div>
+                                <div class="mock-row"><span>Pedro Costa</span> <span>Mensal</span> <span class="mock-badge warning">Pendente</span></div>
+                                <div style="margin-top:8px; display:flex; gap:6px; font-size:0.65rem;">
+                                    <span class="mock-badge primary">➕ Novo Aluno</span>
+                                    <span style="color:#636e72;">🔍 Buscar...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tela 4: Cadastro de Aluno -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <span class="dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </span>
+                        Cadastro
+                    </div>
+                    <div class="prototype-body">
+                        <div class="screen-title">📝 Cadastro de Aluno</div>
+                        <div class="screen-desc">Formulário completo para novos alunos.</div>
+                        <div class="mockup">
+                            <div class="mock-content" style="text-align:left;">
+                                <div class="mock-row"><span class="mock-label">📛 Nome</span> <span class="mock-value">João Silva</span></div>
+                                <div class="mock-row"><span class="mock-label">🆔 CPF</span> <span class="mock-value">123.456.789-00</span></div>
+                                <div class="mock-row"><span class="mock-label">📧 Email</span> <span class="mock-value">joao@email.com</span></div>
+                                <div class="mock-row"><span class="mock-label">📅 Nasc.</span> <span class="mock-value">15/03/1990</span></div>
+                                <div class="mock-row"><span class="mock-label">📋 Plano</span> <span class="mock-value">Mensal</span></div>
+                                <div style="display:flex; gap:8px; margin-top:8px;">
+                                    <span class="mock-btn" style="background:#00b894;">💾 Salvar</span>
+                                    <span class="mock-btn" style="background:#e17055;">❌ Cancelar</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tela 5: Matrículas -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <span class="dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </span>
+                        Matrículas
+                    </div>
+                    <div class="prototype-body">
+                        <div class="screen-title">📋 Matrículas</div>
+                        <div class="screen-desc">Gestão de matrículas ativas e históricas.</div>
+                        <div class="mockup">
+                            <div class="mock-content">
+                                <div style="display:flex; justify-content:space-between; border-bottom:1px solid #b2bec3; padding-bottom:4px; font-weight:600; font-size:0.7rem; color:#2c3e50;">
+                                    <span>Aluno</span> <span>Plano</span> <span>Venc.</span>
+                                </div>
+                                <div class="mock-row"><span>João</span> <span>Mensal</span> <span class="mock-badge success">10/08</span></div>
+                                <div class="mock-row"><span>Maria</span> <span>Trim.</span> <span class="mock-badge warning">05/08</span></div>
+                                <div class="mock-row"><span>Pedro</span> <span>Mensal</span> <span class="mock-badge danger">20/07</span></div>
+                                <div style="margin-top:8px;">
+                                    <span class="mock-btn" style="background:#6c5ce7;">➕ Nova Matrícula</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tela 6: Pagamentos -->
+                <div class="prototype-card">
+                    <div class="prototype-header">
+                        <span class="dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </span>
+                        Pagamentos
+                    </div>
+                    <div class="prototype-body">
+                        <div class="screen-title">💰 Pagamentos</div>
+                        <div class="screen-desc">Controle financeiro e inadimplência.</div>
+                        <div class="mockup">
+                            <div class="mock-content">
+                                <div style="display:flex; justify-content:space-between; border-bottom:1px solid #b2bec3; padding-bottom:4px; font-weight:600; font-size:0.7rem; color:#2c3e50;">
+                                    <span>Aluno</span> <span>Venc.</span> <span>Status</span>
+                                </div>
+                                <div class="mock-row"><span>João</span> <span>10/08</span> <span class="mock-badge success">✅ Pago</span></div>
+                                <div class="mock-row"><span>Maria</span> <span>05/08</span> <span class="mock-badge danger">🔴 Atrasado</span></div>
+                                <div class="mock-row"><span>Pedro</span> <span>20/08</span> <span class="mock-badge warning">⏳ Pendente</span></div>
+                                <div style="font-size:0.65rem; color:#636e72; margin-top:4px;">
+                                    Total: R$ 2.450,00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /prototype-grid -->
+        </section>
+
+        <!-- ===== REQUISITOS FUNCIONAIS ===== -->
+        <section>
+            <h2>📋 Requisitos do Sistema</h2>
+            <p>O SmartGym será desenvolvido atendendo aos seguintes requisitos:</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:35%;">Requisito</th>
+                            <th style="width:55%;">Descrição</th>
+                            <th style="width:10%;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Autenticação</strong></td>
+                            <td>Login com e-mail e senha, recuperação de senha</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Controle de Perfis</strong></td>
+                            <td>Administrador, Instrutor e Aluno com permissões distintas</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CRUD Alunos</strong></td>
+                            <td>Cadastro, edição, listagem e exclusão de alunos</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CRUD Planos</strong></td>
+                            <td>Cadastro, edição, listagem e exclusão de planos</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Matrículas</strong></td>
+                            <td>Vinculação de alunos a planos com datas de vigência</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Frequência</strong></td>
+                            <td>Registro diário de presença dos alunos</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pagamentos</strong></td>
+                            <td>Controle de pagamentos e inadimplência</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dashboards</strong></td>
+                            <td>Indicadores visuais com gráficos e resumos</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Upload de Arquivos</strong></td>
+                            <td>Foto de perfil e comprovantes de pagamento</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Relatórios</strong></td>
+                            <td>Exportação de dados em PDF e Excel</td>
+                            <td><span class="tag tag-warning">📌 Planejado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ===== CONCLUSÃO ===== -->
+        <section>
+            <h2>📌 Conclusão</h2>
+            <div class="quote-box">
+                <p>
+                    O <strong>SmartGym</strong> nasce para <span style="color:#6c5ce7; font-weight:700;">revolucionar</span> 
+                    a gestão de academias, oferecendo uma plataforma que <span style="color:#00b894; font-weight:700;">centraliza, automatiza e simplifica</span> 
+                    todas as operações do dia a dia. Mais do que um sistema, é uma <strong>ferramenta estratégica</strong> 
+                    que permite que gestores foquem no que realmente importa: <strong>o bem-estar e a evolução dos seus alunos</strong>.
+                </p>
+                <p style="margin-top:12px;">
+                    Com uma <strong>visão clara de futuro</strong>, o SmartGym será desenvolvido com 
+                    <span style="color:#fdcb6e; font-weight:700;">tecnologias modernas</span> e 
+                    <span style="color:#fd79a8; font-weight:700;">arquitetura escalável</span>, 
+                    garantindo <strong>segurança, desempenho e facilidade de uso</strong> para todos os perfis de usuário.
+                </p>
+                <cite>— Equipe SmartGym · Projeto Integrador 2026</cite>
+            </div>
+        </section>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="footer">
+            <div>
+                <strong>🏋️ SmartGym</strong> — Sistema de Gestão para Academias
+            </div>
+            <div>
+                📌 <strong>Projeto Integrador</strong> · Disciplina: Projeto e Implementação de Sistemas para Web 2
+            </div>
+        </footer>
+
+    </div><!-- /container -->
+
+</body>
+</html>
